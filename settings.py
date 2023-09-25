@@ -9,7 +9,9 @@ SESSION_CONFIGS = [
         num_demo_participants=3,
     ),
     dict(
-        name='survey', app_sequence=['survey', 'payment_info'], num_demo_participants=1
+        name='survey', 
+        app_sequence=['survey', 'payment_info'],
+        num_demo_participants=1
     ),
 ]
 
@@ -46,7 +48,8 @@ ROOMS = [
     ),
     dict(
         name='live_demo',
-        display_name='Room for live demo (no participant labels)')
+        display_name='Room for live demo (no participant labels)'
+    )
 ]
 
 ADMIN_USERNAME = 'admin'
