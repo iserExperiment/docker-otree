@@ -23,6 +23,11 @@
     docker compose exec otreeserver otree resetdb
     ```
 
+- To check logs:
+    ```
+    docker compose logs otreeserver -f
+    ```
+
 - To shutdown:
     ```
     docker compose down
