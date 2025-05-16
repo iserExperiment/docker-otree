@@ -54,3 +54,30 @@ Instead of using Docker-compose, you can build using the Dockerfile itself.
     ```
     docker run --rm -it -v $PWD:/app devotree otree startapp instruction
     ```
+
+
+## How to directly copy the data of a Docker volume.
+
+You can copy a volume's contents elsewhere with:
+
+```
+docker run --rm \
+  -v XXXXX:/var/lib/postgresql/data \
+  -v $(pwd):/backup \
+  alpine \
+  tar cvf /backup/YYYYY.tar /var/lib/postgresql/data
+```
+
+This command temporarily launches a new Alpine Linux container, mounts the postgres-data volume at `/var/lib/postgresql/data`, and creates a `YYYYY.tar` archive in your current directory. The resulting tar file contains all the PostgreSQL database files.
+
+### How to Restore a Docker Volume
+
+1. Extract the tar file into a directory of your choice. This will create a `var` folder.  
+2. In your compose.yaml, under `devices > database > volumes`, replace with:  
+    ```yaml
+    volumes:
+      - /PATH/TO/var/lib/postgresql/data:/var/lib/postgresql/data
+    ```
+
+   Here, `/PATH/TO/` on the left-hand side should point to where you extracted the tar file. You can use a relative path if you prefer.  
+3. Run the container.
