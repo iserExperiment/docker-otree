@@ -18,14 +18,15 @@
     ```
     - Adding option `d` prevents the log from displaying.
 
-- To `resetdb`:
+- To reset the database (`resetdb`):
     ```
     docker compose exec otreeserver otree resetdb
     ```
+    - Here, `otreeserver` is the service name defined in the `.env` file.
 
 - To check logs:
     ```
-    docker compose logs otreeserver -f
+    docker compose logs -f
     ```
 
 - To shutdown:
@@ -34,6 +35,27 @@
     ```
     - Then, the containers are stopped and removed.
     - Since Postgres data is stored in Docker's volume, it will survive unless deleted by command `docker volume rm {NAME OF VOLUME}`.
+
+- To dump:
+    ```
+    mkdir postgres_data
+    docker compose exec database pg_dump --clean --if-exists -U otree_user otree_db > postgres_data/backup.sql
+    ```
+    - Here, `database` is the service name, `otree_user` is the container name, and `otree_db` is the database name. All of these are defined in the `.env` file. The path `postgres_data/backup.sql` specifies the output file.
+    - You can then find the `.sql` file in the `postgres_data` directory.
+
+- To restore from `.sql` file:
+    ```
+    cat postgres_data/backup.sql | docker compose exec -T database psql -U otree_user -d otree_db
+    ```
+    - Here, the path `postgres_data/backup.sql` specifies the input file. `database` is the service name, `otree_user` is the container name, and `otree_db` is the database name. All of these are defined in the `.env` file.
+
+- To initialize the database at startup using an `.sql` file, add the following line under `devices > database > volumes` in `compose.yaml`:
+    ```yaml
+    volumes:
+      - ./postgres_data:/docker-entrypoint-initdb.d
+    ```
+    - Any `.sql` files stored in the `postgres_data` directory will be executed automatically.
 
 
 ## In the development phase
